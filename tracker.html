@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Package Tracker</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@700&family=Luckiest+Guy&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome for social logos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #d3b5e5, #e6aaf2, #a9d2f2);
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hero Title */
+        .hero {
+            font-family: 'Luckiest Guy', cursive;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(270deg, #1b3ae7, #13d905, #09b7ba, #5f0ade, #ff6a00);
+            background-size: 1000% 1000%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slideUp 1s ease-out forwards, gradientShift 8s ease infinite, wiggle 2s ease-in-out infinite;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(2deg);
+            }
+
+            50% {
+                transform: rotate(-2deg);
+            }
+
+            75% {
+                transform: rotate(1.5deg);
+            }
+        }
+
+        .tracker {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 1s ease-in-out forwards;
+            opacity: 0;
+            animation-delay: 1s;
+            /* show AFTER hero */
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #4a148c;
+            text-align: center;
+        }
+
+        input {
+            padding: 12px 15px;
+            width: 70%;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #7b1fa2;
+            box-shadow: 0 0 5px rgba(123, 31, 162, 0.3);
+        }
+
+        button {
+            padding: 12px 20px;
+            margin-left: 8px;
+            background: #7b1fa2;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: #4a148c;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .summary {
+            background: #ede7f6;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary h2 {
+            margin-top: 0;
+            font-size: 1.6rem;
+            color: #6a1b9a;
+        }
+
+        .summary p {
+            margin: 6px 0;
+            color: #444;
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .transit {
+            background: #0277bd;
+        }
+
+        .pending {
+            background: #f0026d;
+        }
+
+        .delivered {
+            background: #2e7d32;
+        }
+
+        .exception {
+            background: #c62828;
+        }
+
+        .out-for-delivery {
+            background: #fbc02d;
+        }
+
+
+        .history {
+            text-align: left;
+        }
+
+        .history h3 {
+            margin-top: 0;
+            color: #6a1b9a;
+        }
+
+        .event {
+            position: relative;
+            border-left: 3px solid #7b1fa2;
+            padding: 12px 15px;
+            margin: 12px 0;
+            background: #f3e5f5;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .event:hover {
+            transform: translateX(5px);
+        }
+
+        .event strong {
+            color: #4a148c;
+        }
+
+        .error {
+            color: #d32f2f;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        /* Social share section */
+        .share {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
+        .share a {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: white;
+            transition: transform 0.2s;
+            text-decoration: none;
+        }
+
+        .share a:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp {
+            background: #25D366;
+        }
+
+        .telegram {
+            background: #0088cc;
+        }
+
+        .facebook {
+            background: #1877F2;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Hero Heading -->
+    <h1 class="hero">Boxed And Confused</h1>
+
+    <div class="tracker">
+        <h2>📦Package Tracker📦</h2>
+        <input type="text" id="trackingNumber" placeholder="Enter Tracking Number" />
+        <button onclick="trackPackage()">Track</button>
+        <div id="result"></div>
+
+        <!-- Social Share -->
+        <div class="share">
+            <a id="whatsappShare" class="whatsapp" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a id="facebookShare" class="facebook" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a id="telegramShare" class="telegram" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+        </div>
+    </div>
+
+    <script>
+        const mockData = {
+            "ABC123": {
+                trackingNumber: "ABC123",
+                recipient: "Sanskriti Suhani",
+                sender: "Amazon",
+                from: "Ranchi, India",
+                to: "Bangalore, India",
+                courier: "DTDC",
+                destination: "ind INDIA",
+                status: "In Transit",
+                estimatedDelivery: "Aug 29, 2025",
+                daysInTransit: 3,
+                history: [
+                    { date: "Aug 21, 2025 10:00", location: "Ranchi, Jharkhand", status: "Shipped" },
+                    { date: "Aug 22, 2025 14:30", location: "Indore, Madhya Pradesh", status: "In Transit" },
+                    { date: "Aug 23, 2025 09:15", location: "Bangalore, Karnataka", status: "In Transit" },
+                ]
+            },
+
+            "LMN456": {
+                trackingNumber: "LMN456",
+                recipient: "Tara Kapoor",
+                sender: "Nykaa",
+                from: "Delhi, India",
+                to: "Kolkata, India",
+                courier: "DTDC",
+                destination: "ind INDIA",
+                status: "Delivered",
+                estimatedDelivery: "Aug 24, 2025",
+                daysInTransit: 2,
+                history: [
+                    { date: "Aug 22, 2025 09:00", location: "Delhi, Delhi", status: "Shipped" },
+                    { date: "Aug 23, 2025 13:45", location: "Lucknow, Uttar Pradesh", status: "In Transit" },
+                    { date: "Aug 24, 2025 11:30", location: "Kolkata, West Bengal", status: "Delivered" },
+                ]
+            },
+
+            "QRS321": {
+                trackingNumber: "QRS321",
+                recipient: "Meera Sharma",
+                sender: "Myntra",
+                from: "Jaipur, India",
+                to: "Hyderabad, India",
+                courier: "FedEx",
+                destination: "ind INDIA",
+                status: "In Transit",
+                estimatedDelivery: "Aug 28, 2025",
+                daysInTransit: 3,
+                history: [
+                    { date: "Aug 25, 2025 10:15", location: "Jaipur, Rajasthan", status: "Shipped" },
+                    { date: "Aug 26, 2025 16:40", location: "Nagpur, Maharashtra", status: "In Transit" },
+                    { date: "Aug 27, 2025 08:50", location: "Bangalore, Karnataka", status: "In Transit" },
+                ]
+            },
+
+            "TUV654": {
+                trackingNumber: "TUV654",
+                recipient: "Rohit Verma",
+                sender: "Amazon",
+                from: "Ahmedabad, India",
+                to: "Pune, India",
+                courier: "Blue Dart",
+                destination: "ind INDIA",
+                status: "Pending",
+                estimatedDelivery: "Aug 30, 2025",
+                daysInTransit: 1,
+                history: [
+                    { date: "Aug 28, 2025 09:30", location: "Ahmedabad, Gujarat", status: "Shipped" },
+                ]
+            },
+
+            "EFG987": {
+                trackingNumber: "EFG987",
+                recipient: "Sania Iyer",
+                sender: "Flipkart",
+                from: "Chandigarh, India",
+                to: "Bangalore, India",
+                courier: "DTDC",
+                destination: "ind INDIA",
+                status: "Out for Delivery",
+                estimatedDelivery: "Aug 25, 2025",
+                daysInTransit: 2,
+                history: [
+                    { date: "Aug 23, 2025 07:45", location: "Chandigarh, Punjab", status: "Shipped" },
+                    { date: "Aug 24, 2025 15:20", location: "Nagpur, Maharashtra", status: "In Transit" },
+                    { date: "Aug 25, 2025 08:00", location: "Bangalore, Karnataka", status: "Out for Delivery" },
+                ]
+            },
+
+            "XYZ789": {
+                trackingNumber: "XYZ789",
+                recipient: "Arjun Mehta",
+                sender: "Flipkart",
+                from: "Mumbai, India",
+                to: "Chennai, India",
+                courier: "Blue Dart",
+                destination: "ind INDIA",
+                status: "Exception",
+                estimatedDelivery: "Aug 25, 2025",
+                daysInTransit: 2,
+                history: [
+                    { date: "Aug 23, 2025 08:45", location: "Mumbai, Maharashtra", status: "Lost" }
+                ]
+            }
+
+
+        };
+
+        function getStatusClass(status) {
+            status = status.toLowerCase();
+            if (status.includes("delivered")) return "delivered";       // Green
+            if (status.includes("in transit")) return "transit";        // Blue
+            if (status.includes("pending")) return "pending";          // Orange/Yellow
+            if (status.includes("exception")) return "exception";      // Red
+            if (status.includes("out for delivery")) return "out-for-delivery"; // Yellow
+            return "";
+        }
+
+        function trackPackage() {
+            const trackingNumber = document.getElementById("trackingNumber").value.trim();
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = "";
+
+            if (!trackingNumber) {
+                resultDiv.innerHTML = "<p class='error'>⚠ Please enter a tracking number.</p>";
+                return;
+            }
+
+            const packageData = mockData[trackingNumber];
+
+            if (packageData) {
+                let summary = `
+          <div class="summary">
+            <h2>Tracking Summary</h2>
+            <p><strong>Tracking Number:</strong> ${packageData.trackingNumber}</p>
+            <p><strong>Recipient:</strong> ${packageData.recipient}</p>
+            <p><strong>Sender:</strong> ${packageData.sender}</p>
+            <p><strong>From:</strong> ${packageData.from}</p>
+            <p><strong>To:</strong> ${packageData.to}</p>
+            <p><strong>Destination:</strong> ${packageData.destination}</p>
+            <p><strong>Courier:</strong> ${packageData.courier}</p>
+            <p><strong>Expected Delivery:</strong> ${packageData.estimatedDelivery}</p>
+            <p><strong>Days in Transit:</strong> ${packageData.daysInTransit}</p>
+            <p><strong>Status:</strong> 
+              <span class="status-tag ${getStatusClass(packageData.status)}">${packageData.status}</span>
+            </p>
+          </div>
+        `;
+
+                let history = `<div class="history"><h3>Tracking History</h3>`;
+                packageData.history.forEach(event => {
+                    history += `<div class="event">
+                        <strong>${event.date}</strong><br>
+                        ${event.location} - ${event.status}
+                      </div>`;
+                });
+                history += "</div>";
+
+                resultDiv.innerHTML = `<div class="results-container">${summary}${history}</div>`;
+
+                // Update share links dynamically
+                const shareUrl = window.location.href + "?track=" + trackingNumber;
+                document.getElementById("whatsappShare").href = `https://wa.me/?text=Track your package here: ${shareUrl}`;
+                document.getElementById("facebookShare").href = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+                document.getElementById("telegramShare").href = `https://t.me/share/url?url=${shareUrl}&text=Track your package here`;
+            } else {
+                resultDiv.innerHTML = "<p class='error'>❌ Tracking number not found.</p>";
+            }
+
+        }
+    </script>
+</body>
+
+</html>
