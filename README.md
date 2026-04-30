@@ -70,10 +70,13 @@ This project was built to:
 ---
 
 ## 📂 Project Structure
-
-
----
-
+```
+BeginnerLevel-Package-Tracker/
+│
+├── README.md
+├── index.html
+└── tracker.html
+```
 
 ---
 
